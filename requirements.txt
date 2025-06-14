@@ -1,0 +1,7 @@
+streamlit>=1.28.0
+pyodbc>=4.0.39
+pandas>=2.0.0
+plotly>=5.17.0
+openai>=1.3.0
+
+# apikey = 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
