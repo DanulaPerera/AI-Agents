@@ -83,7 +83,7 @@ def init_openai():
     """Initialize OpenAI client"""
     return OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key="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",  # Replace with your key
+        api_key="sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  # Replace with your key
     )
 
 # Database schema
