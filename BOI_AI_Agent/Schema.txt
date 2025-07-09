@@ -1,0 +1,170 @@
+database_schema = """
+DATABASE SCHEMA - cdsd:
+
+1. General_Project_Detail(
+    Reference_Number, Project_Type, Project_Category, Project_Name, Enterprise_Code,
+    Project_Officer_Code, Project_Status, Head_Office_Address1, Head_Office_Address2,
+    Head_Office_Address3, Head_Office_Address4, Telephone, Telex, Fax, email,
+    Product_Description, Contact_Person, Contact_Person_Address1, Contact_Person_Address2,
+    Contact_Person_Address3, Contact_Person_Telephone, Contact_Person_Telex,
+    Contact_Person_Fax, Contact_Person_Email, Registration_Number, Is_Direct_Export,
+    Is_Indirect_Export, Is_Local_Sale, Date_of_First_Import, Date_of_First_Export,
+    Is_Quota_Utilized, Incentive_Scheme_Code, Full_Tax_holiday, Concessionary_Tax_Rate,
+    Concessionary_Tax_Period, Application_Submitted_Date, Board_Approval_Date,
+    Approval_Date, Agreement_Date, Cancelled_Date, Implementation_Date,
+    Commercial_Operation_Date, Construction_Commenced_Date, BOI_Sub_Product_Code,
+    Central_Bank_Code, Appraisal_Product_Code, ISIC_Code, Date_of_Confirmation,
+    Project_Sub_Category, Initial_Or_Capacity, Est_Managerial_For, Est_Technical_For,
+    Est_Managerial_Loc, Est_Technical_Loc, Est_Clerical_Loc, Est_Labour_Skilled_Loc,
+    Est_Labour_UnSkilled_Loc, Est_Total_Manpower_For, Est_Total_Manpower_Loc,
+    Est_Share_Capital_For, Est_Loan_Capital_For, Est_Other_Investmant_For,
+    Est_Share_Capital_Loc, Est_Loan_Capital_Loc, Est_Other_Investmant_Loc,
+    Est_Total_Investment_For, Est_Total_Investment_Loc, NewSector, VerificationStatus,
+    AppExchangeRate, ExpPct, LocPct, GICS, gics_t1_des, gics_t2_des, gics_t3_des,
+    ceoname, ceo_designation, ceo_tel, ceomobile, ceomobile2, ceofax, ceoadd1,
+    ceoadd2, ceoadd3, ceoadd4, coname, co_designation, co_tel, comobile, comobile2,
+    cofax, coadd1, coadd2, coadd3, coadd4, ceoemail, coemail, Reference_Number_N,
+    Project_Type_N, Project_Category_N, DatComImplPrj, DatPCommPrj, DraftedOn
+)
+
+RELATIONSHIPS:
+- PRIMARY KEY: (Reference_Number, Project_Type, Project_Category)
+- No foreign key relationships
+
+2. ShareHolders_Country(
+    Reference_Number, Project_Type, Project_Category, Application_Level,
+    Investor_Number1, Share_Holder_Name1, Share_Holder1_Address1, Share_Holder1_Address2,
+    Share_Holder1_Address3, Share_Holder1_Address4,
+    Investor_Number2, Share_Holder_Name2, Share_Holder2_Address1, Share_Holder2_Address2,
+    Share_Holder2_Address3, Share_Holder2_Address4,
+    Investor_Number3, Share_Holder_Name3, Share_Holder3_Address1, Share_Holder3_Address2,
+    Share_Holder3_Address3, Share_Holder3_Address4,
+    Investor_Number4, Share_Holder_Name4, Share_Holder4_Address1, Share_Holder4_Address2,
+    Share_Holder4_Address3, Share_Holder4_Address4,
+    Investor_Number5, Share_Holder_Name5, Share_Holder5_Address1, Share_Holder5_Address2,
+    Share_Holder5_Address3, Share_Holder5_Address4,
+    Investor_Number6, Share_Holder_Name6, Share_Holder6_Address1, Share_Holder6_Address2,
+    Share_Holder6_Address3, Share_Holder6_Address4,
+    Investor_Number7, Share_Holder_Name7, Share_Holder7_Address1, Share_Holder7_Address2,
+    Share_Holder7_Address3, Share_Holder7_Address4,
+    Investor_Number8, Share_Holder_Name8, Share_Holder8_Address1, Share_Holder8_Address2,
+    Share_Holder8_Address3, Share_Holder8_Address4,
+    Investor_Number9, Share_Holder_Name9, Share_Holder9_Address1, Share_Holder9_Address2,
+    Share_Holder9_Address3, Share_Holder9_Address4,
+    Investor_Number10, Share_Holder_Name10, Share_Holder10_Address1, Share_Holder10_Address2,
+    Share_Holder10_Address3, Share_Holder10_Address4,
+    Investor_Number11, Share_Holder_Name11, Share_Holder11_Address1, Share_Holder11_Address2,
+    Share_Holder11_Address3, Share_Holder11_Address4,
+    Investor_Number12, Share_Holder_Name12, Share_Holder12_Address1, Share_Holder12_Address2,
+    Share_Holder12_Address3, Share_Holder12_Address4,
+    Investor_Number13, Share_Holder_Name13, Share_Holder13_Address1, Share_Holder13_Address2,
+    Share_Holder13_Address3, Share_Holder13_Address4,
+    Investor_Number14, Share_Holder_Name14, Share_Holder14_Address1, Share_Holder14_Address2,
+    Share_Holder14_Address3, Share_Holder14_Address4,
+    Investor_Number15, Share_Holder_Name15, Share_Holder15_Address1, Share_Holder15_Address2,
+    Share_Holder15_Address3, Share_Holder15_Address4,
+    Country_Code1, Country_Code2, Country_Code3, Country_Code4, Country_Code5,
+    Country_Code6, Country_Code7, Country_Code8, Country_Code9, Country_Code10,
+    Country_Code11, Country_Code12, Country_Code13, Country_Code14, Country_Code15,
+    ShareHolder_Type
+)
+
+RELATIONSHIPS:
+- ShareHolders_Country.Reference_Number → General_Project_Detail.Reference_Number
+- ShareHolders_Country.Project_Type → General_Project_Detail.Project_Type
+- ShareHolders_Country.Project_Category → General_Project_Detail.Project_Category
+
+3. ANNUAT(
+    ENTCODE,            -- Entity Code
+    REFNO,              -- Reference Number
+    PRJTYPE,            -- Project Type
+    PRJCAT,             -- Project Category
+    YEAR,               -- Year of Record
+    EXPVLUANU,          -- Export Value (Annual)
+    EMPVLUANU,          -- Employment Value (Annual)
+    RMIMPANU,           -- Raw Material Import (Annual)
+    CGIMP,              -- Capital Goods Import
+    IGIMPANU,           -- Intermediate Goods Import (Annual)
+    LOCINVANU,          -- Local Investment (Annual)
+    FORINVANU,          -- Foreign Investment (Annual)
+    FOREQTYANU,         -- Foreign Equity (Annual)
+    LOCEQTYANU,         -- Local Equity (Annual)
+    FORLOANANU,         -- Foreign Loan (Annual)
+    LOCLOANANU,         -- Local Loan (Annual)
+    EMPYEARQ,           -- Employment Yearly Qualifier
+    INVYEARQ,           -- Investment Yearly Qualifier
+    EXPMONTH,           -- Export Month
+    IMPMONTH            -- Import Month
+)
+
+RELATIONSHIPS:
+- ANNUAT.REFNO → General_Project_Detail.Reference_Number
+- ANNUAT.PRJTYPE → General_Project_Detail.Project_Type
+- ANNUAT.PRJCAT → General_Project_Detail.Project_Category
+
+
+"""
+api_key="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"
+
+
+## AI Custom Report: COUNTRY REPORT LOGIC
+
+**Trigger Phrase**: "Country Report for [Country_Name]" or "Project list for [Country_Name]"
+
+**Expected Output**: A detailed project-level table filtered by investor country, including the following columns:
+- Section (Project_Category)
+- Project_Name
+- Product_Description
+- NewSector
+- Current Status (Project_Status)
+
+**Data Source**:
+- `General_Project_Detail` (main project metadata)
+- Joined with `ShareHolders_Country` (to match Country_Code1 through Country_Code15)
+
+**Country Matching Logic**:
+- WHERE [Country_Code1] = 'XX' OR [Country_Code2] = 'XX' OR ... [Country_Code15] = 'XX'
+- Country codes match ISO format or the custom country code list provided in schema
+
+**Project Status Filtering**:
+- Default: No status filter (all projects)
+- Optional: If user specifies:
+  - "active projects": filter by Project_Status IN ('A1','B1','C1','C2','C3','D1','D2','E1')
+  - "pipeline projects": filter by Project_Status IN ('A1','B1','C1','C2','C3','D1','D2')
+
+**Project Type Classification**:
+- Section is derived from Project_Category:
+  - 21 = Section 17
+  - 24 = Non BOI
+  - 61–64 = Section 16
+  - 71–74 = Section 17
+
+**Sorting**:
+- Default: Sort by Project_Status ascending, then Project_Name
+
+**Example Query Logic** (pseudo-SQL for AI generation):
+```sql
+SELECT 
+  g.Project_Category AS Section,
+  g.Project_Name,
+  g.Product_Description,
+  g.NewSector,
+  g.Project_Status AS [Current Status]
+FROM 
+  General_Project_Detail g
+JOIN 
+  ShareHolders_Country s ON 
+    g.Reference_Number = s.Reference_Number AND 
+    g.Project_Type = s.Project_Type AND 
+    g.Project_Category = s.Project_Category
+WHERE 
+  'XX' IN (
+    s.Country_Code1, s.Country_Code2, s.Country_Code3, s.Country_Code4, s.Country_Code5,
+    s.Country_Code6, s.Country_Code7, s.Country_Code8, s.Country_Code9, s.Country_Code10,
+    s.Country_Code11, s.Country_Code12, s.Country_Code13, s.Country_Code14, s.Country_Code15
+  )
+-- Optional filters based on keywords:
+-- AND g.Project_Status IN ('A1','B1','C1','C2','C3','D1','D2','E1')  -- for active
+-- AND g.Project_Status IN ('A1','B1','C1','C2','C3','D1','D2')        -- for pipeline
+ORDER BY 
+  g.Project_Status, g.Project_Name

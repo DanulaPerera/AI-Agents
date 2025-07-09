@@ -1,0 +1,127 @@
+report_sql_schema = {
+    "tables": {
+        "General_Project_Detail": [
+            "Reference_Number", "Project_Type", "Project_Category", "Project_Name",
+            "Project_Status", "Product_Description", "NewSector"
+        ],
+        "ShareHolders_Country": [
+            "Reference_Number", "Project_Type", "Project_Category",
+            "Country_Code1", "Country_Code2", "Country_Code3", "Country_Code4",
+            "Country_Code5", "Country_Code6", "Country_Code7", "Country_Code8",
+            "Country_Code9", "Country_Code10", "Country_Code11", "Country_Code12",
+            "Country_Code13", "Country_Code14", "Country_Code15"
+        ],
+        "ANNUAT": [
+            "REFNO", "PRJTYPE", "PRJCAT", "YEAR",
+            "EXPVLUANU", "EMPVLUANU", "FORINVANU"
+        ]
+    },
+    "joins": [
+        "General_Project_Detail.Reference_Number = ShareHolders_Country.Reference_Number",
+        "General_Project_Detail.Project_Type = ShareHolders_Country.Project_Type",
+        "General_Project_Detail.Project_Category = ShareHolders_Country.Project_Category",
+        "General_Project_Detail.Reference_Number = ANNUAT.REFNO",
+        "General_Project_Detail.Project_Type = ANNUAT.PRJTYPE",
+        "General_Project_Detail.Project_Category = ANNUAT.PRJCAT"
+    ],
+    "filters": {
+        "valid_statuses": ["A1", "B1", "C1", "C2", "C3", "D1", "D2", "E1"],
+        "exclude_categories": [24],  # Non-BOI
+        "section_16_categories": [61, 62, 63, 64],
+        "section_17_categories": [21, 71, 72, 74],
+        "Project_Type_N":["GENN"]
+    },
+    "queries": {
+        "fdi_inflow": 
+            SELECT SUM(A.FORINVANU) AS Total_FDI
+            FROM ANNUAT A
+            JOIN General_Project_Detail G ON A.REFNO = G.Reference_Number AND A.PRJTYPE = G.Project_Type AND A.PRJCAT = G.Project_Category
+            JOIN ShareHolders_Country S ON G.Reference_Number = S.Reference_Number AND G.Project_Type = S.Project_Type AND G.Project_Category = S.Project_Category
+            WHERE A.YEAR <= '2025'
+              AND G.Project_Status IN ('A1','B1','C1','C2','C3','D1','D2','E1')
+              AND G.Project_Category NOT IN (24)
+              AND 'IN' IN (S.Country_Code1, S.Country_Code2, S.Country_Code3, S.Country_Code4, S.Country_Code5,
+                           S.Country_Code6, S.Country_Code7, S.Country_Code8, S.Country_Code9, S.Country_Code10,
+                           S.Country_Code11, S.Country_Code12, S.Country_Code13, S.Country_Code14, S.Country_Code15);
+
+        "project_counts_by_section":
+            SELECT 
+              CASE 
+                WHEN G.Project_Category IN (61,62,63,64) THEN 'Section 16'
+                WHEN G.Project_Category IN (21,71,72,74) THEN 'Section 17'
+              END AS Section,
+              COUNT(DISTINCT G.Reference_Number) AS Total_Projects,
+              COUNT(DISTINCT CASE WHEN G.Project_Status = 'E1' THEN G.Reference_Number END) AS Commercial_Projects,
+              COUNT(DISTINCT CASE WHEN G.Project_Status != 'E1' THEN G.Reference_Number END) AS Pipeline_Projects
+            FROM General_Project_Detail G
+            JOIN ShareHolders_Country S ON G.Reference_Number = S.Reference_Number AND G.Project_Type = S.Project_Type AND G.Project_Category = S.Project_Category
+            WHERE G.Project_Status IN ('A1','B1','C1','C2','C3','D1','D2','E1')
+              AND G.Project_Category IN (21,61,62,63,64,71,72,74)
+              AND 'IN' IN (S.Country_Code1, S.Country_Code2, S.Country_Code3, S.Country_Code4, S.Country_Code5,
+                           S.Country_Code6, S.Country_Code7, S.Country_Code8, S.Country_Code9, S.Country_Code10,
+                           S.Country_Code11, S.Country_Code12, S.Country_Code13, S.Country_Code14, S.Country_Code15)
+            GROUP BY Section;
+
+        "sector_breakdown":
+            SELECT 
+              G.NewSector,
+              CASE 
+                WHEN G.Project_Category IN (61,62,63,64) THEN 'Section 16'
+                WHEN G.Project_Category IN (21,71,72,74) THEN 'Section 17'
+              END AS Section,
+              COUNT(DISTINCT G.Reference_Number) AS Project_Count
+            FROM General_Project_Detail G
+            JOIN ShareHolders_Country S ON G.Reference_Number = S.Reference_Number AND G.Project_Type = S.Project_Type AND G.Project_Category = S.Project_Category
+            WHERE G.Project_Status = 'E1'
+              AND G.Project_Category_N NOT IN (24)
+              AND 'IN' IN (S.Country_Code1, S.Country_Code2, S.Country_Code3, S.Country_Code4, S.Country_Code5,
+                           S.Country_Code6, S.Country_Code7, S.Country_Code8, S.Country_Code9, S.Country_Code10,
+                           S.Country_Code11, S.Country_Code12, S.Country_Code13, S.Country_Code14, S.Country_Code15)
+            GROUP BY G.NewSector, Section;
+
+        "exports_and_employment":
+            SELECT 
+              SUM(A.EXPVLUANU) AS Exports_2025,
+              SUM(A.EMPVLUANU) AS Employment_2025
+            FROM ANNUAT A
+            JOIN General_Project_Detail G ON A.REFNO = G.Reference_Number AND A.PRJTYPE = G.Project_Type AND A.PRJCAT = G.Project_Category
+            JOIN ShareHolders_Country S ON G.Reference_Number = S.Reference_Number AND G.Project_Type = S.Project_Type AND G.Project_Category = S.Project_Category
+            WHERE A.YEAR = '2025'
+              AND G.Project_Status IN ('A1','B1','C1','C2','C3','D1','D2','E1')
+              AND G.Project_Category_N NOT IN (24)
+              AND 'IN' IN (S.Country_Code1, S.Country_Code2, S.Country_Code3, S.Country_Code4, S.Country_Code5,
+                           S.Country_Code6, S.Country_Code7, S.Country_Code8, S.Country_Code9, S.Country_Code10,
+                           S.Country_Code11, S.Country_Code12, S.Country_Code13, S.Country_Code14, S.Country_Code15);
+
+        "sector_summary_pivot":
+            SELECT 
+                CASE 
+                    WHEN G.Project_Category IN (61,62,63,64) THEN 'Section 16'
+                    WHEN G.Project_Category IN (21,71,72,74) THEN 'Section 17'
+                END AS Section,
+                COUNT(DISTINCT CASE WHEN G.NewSector = 'Manufacturing' THEN G.Reference_Number END) AS Manufacturing,
+                COUNT(DISTINCT CASE WHEN G.NewSector = 'Apparel' THEN G.Reference_Number END) AS Apparel,
+                COUNT(DISTINCT CASE WHEN G.NewSector = 'Infrastructure' THEN G.Reference_Number END) AS Infrastructure,
+                COUNT(DISTINCT CASE WHEN G.NewSector = 'Knowledge Services' THEN G.Reference_Number END) AS Knowledge_Services,
+                COUNT(DISTINCT CASE WHEN G.NewSector = 'Tourism & Leisure' THEN G.Reference_Number END) AS Tourism_Leisure,
+                COUNT(DISTINCT CASE WHEN G.NewSector = 'Utilities' THEN G.Reference_Number END) AS Utilities,
+                COUNT(DISTINCT CASE WHEN G.NewSector = 'Services' THEN G.Reference_Number END) AS Services,
+                COUNT(DISTINCT CASE WHEN G.NewSector = 'Agriculture' THEN G.Reference_Number END) AS Agriculture
+            FROM General_Project_Detail G
+            JOIN ShareHolders_Country S 
+                ON G.Reference_Number = S.Reference_Number 
+            AND G.Project_Type = S.Project_Type 
+            AND G.Project_Category = S.Project_Category
+            WHERE G.Project_Status IN ('A1','B1','C1','C2','C3','D1','D2','E1')
+            AND G.Project_Category NOT IN (24)
+            AND 'IN' IN (
+                    S.Country_Code1, S.Country_Code2, S.Country_Code3, S.Country_Code4,
+                    S.Country_Code5, S.Country_Code6, S.Country_Code7, S.Country_Code8,
+                    S.Country_Code9, S.Country_Code10, S.Country_Code11, S.Country_Code12,
+                    S.Country_Code13, S.Country_Code14, S.Country_Code15
+                )
+            GROUP BY 
+                CASE 
+                    WHEN G.Project_Category IN (61,62,63,64) THEN 'Section 16'
+                    WHEN G.Project_Category IN (21,71,72,74) THEN 'Section 17'
+                END;
