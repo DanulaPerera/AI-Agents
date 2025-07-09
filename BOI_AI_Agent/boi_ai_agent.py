@@ -652,7 +652,7 @@ def init_openai_client():
     """Initialize OpenAI client"""
     return OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key="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"
+        api_key="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     )
 
 @st.cache_resource
