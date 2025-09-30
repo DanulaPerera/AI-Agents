@@ -104,7 +104,7 @@ RELATIONSHIPS:
 
 
 """
-api_key="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"
+api_key="sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 
 ## AI Custom Report: COUNTRY REPORT LOGIC
@@ -167,4 +167,5 @@ WHERE
 -- AND g.Project_Status IN ('A1','B1','C1','C2','C3','D1','D2','E1')  -- for active
 -- AND g.Project_Status IN ('A1','B1','C1','C2','C3','D1','D2')        -- for pipeline
 ORDER BY 
+
   g.Project_Status, g.Project_Name
